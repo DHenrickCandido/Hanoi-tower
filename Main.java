@@ -8,13 +8,10 @@ public class Main {
         int maxSizeStack = 5;
         int countPlays = 0;
 
-        Stack stackLeft = randomUniqueStack(maxSizeStack);
-        Stack stackMiddle = new Stack();
-        Stack stackRight = new Stack();
-
-        // stackLeft.push(3);
-        // stackLeft.push(2);
-        // stackLeft.push(1);
+        Stack[] stacks = new Stack[3];
+        stacks[0] = randomUniqueStack(maxSizeStack);
+        stacks[1] = new Stack();
+        stacks[2] = new Stack();
 
         Scanner scan = new Scanner(System.in);  
 
@@ -24,130 +21,80 @@ public class Main {
 
             int valuePopped = 0;
 
-            stackLeft.printH();
-            stackMiddle.printH();
-            stackRight.printH();
+            stacks[0].printH();
+            stacks[1].printH();
+            stacks[2].printH();
 
 
 
             boolean choosingCheck = false;
+            String towerChoice;
+            int towerChoiceInt;
 
             do {
                 System.out.println("Escolha a torre:");
-                System.out.println("1 -> left");
-                System.out.println("2 -> middle");
-                System.out.println("3 -> right");
-                System.out.println("Plays: "+ countPlays);
+                System.out.println("0 -> left");
+                System.out.println("1 -> middle");
+                System.out.println("2 -> right");
+                System.out.println("Plays: "+ countPlays+"\n");
 
-                String towerChoice = scan.nextLine();
-    
-                if (towerChoice.equals("1")) {
-                    if (!stackLeft.isEmpty()) {
-                        valuePopped = stackLeft.pop();
-                        choosingCheck = true;
-                    }
-                    else {
-                        System.out.println("Esta torre esta vazia.");
-                    }
-                }
+                do {
+                    towerChoice = scan.nextLine();
+                } while(!towerChoice.equals("0") && !towerChoice.equals("1") && !towerChoice.equals("2"));
 
-                if (towerChoice.equals("2")) {
-                    if (!stackMiddle.isEmpty()) {
-                        valuePopped = stackMiddle.pop();
-                        choosingCheck = true;
-                    }
-                    else {
-                        System.out.println("Esta torre esta vazia.");
-                    }
+                towerChoiceInt = Integer.parseInt(towerChoice);
+                if (!stacks[towerChoiceInt].isEmpty()) {
+                    valuePopped = stacks[towerChoiceInt].pop();
+                    choosingCheck = true;
                 }
+                else {
+                    System.out.println("Esta torre esta vazia.");
+                }
+                
 
-                if (towerChoice.equals("3")) {
-                    if (!stackRight.isEmpty()) {
-                        valuePopped = stackRight.pop();
-                        choosingCheck = true;
-                    }
-                    else {
-                        System.out.println("Esta torre esta vazia.");
-                    }
-                }
             } while (!choosingCheck);
 
             boolean choosingDestinationCheck = false;
             do {
                 System.out.println("Escolha a torre de destino:");
-                System.out.println("1 -> left");
-                System.out.println("2 -> middle");
-                System.out.println("3 -> right\n");
-                
-                String towerTargetChoice = scan.nextLine();
+                System.out.println("0 -> left");
+                System.out.println("1 -> middle");
+                System.out.println("2 -> right");
+                System.out.println("-1 -> cancelar acao\n");
 
                 
-                //Left
-                if (towerTargetChoice.equals("1")) {
-                    if (stackLeft.isEmpty()){
-                        stackLeft.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackLeft.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
-                    }
-                    else if (valuePopped < stackLeft.peek()) {
-                        stackLeft.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackLeft.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
-                    } else {
-                        System.out.println("Esta torre tem no topo menor");
+                String towerTargetChoice;
+                do {
+                    towerTargetChoice = scan.nextLine();
+                } while(!towerTargetChoice.equals("-1") && !towerTargetChoice.equals("0") && !towerTargetChoice.equals("1") && !towerTargetChoice.equals("2"));
+                
+                if (towerTargetChoice.equals("-1")) {
+                    stacks[towerChoiceInt].push(valuePopped);
+                    countPlays-=1;
+                    break;
+                }
+                int towerTargetChoiceInt = Integer.parseInt(towerTargetChoice);
+
+                
+                if (stacks[towerTargetChoiceInt].isEmpty()){
+                    stacks[towerTargetChoiceInt].push(valuePopped);
+                    choosingDestinationCheck = true;
+                    if (stacks[towerTargetChoiceInt].size() >= maxSizeStack) {
+                        System.out.println("\nVOCE VENCEU\n");
+                        playing = false;
                     }
                 }
-
-                //Middle
-                if (towerTargetChoice.equals("2")) {
-                    if (stackMiddle.isEmpty()){
-                        stackMiddle.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackMiddle.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
+                else if (valuePopped < stacks[towerTargetChoiceInt].peek()) {
+                    stacks[towerTargetChoiceInt].push(valuePopped);
+                    choosingDestinationCheck = true;
+                    if (stacks[towerTargetChoiceInt].size() >= maxSizeStack) {
+                        System.out.println("\nVOCE VENCEU\n");
+                        playing = false;
                     }
-                    else if (valuePopped < stackMiddle.peek()) {
-                        stackMiddle.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackMiddle.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
-                    } else {
-                        System.out.println("Esta torre tem no topo menor");
-                    }
+                } else {
+                    System.out.println("Esta torre tem no topo menor");
                 }
-
-                //Right
-                if (towerTargetChoice.equals("3")) {
-                    if (stackRight.isEmpty()){
-                        stackRight.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackRight.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
-                    }
-                    else if (valuePopped < stackRight.peek()) {
-                        stackRight.push(valuePopped);
-                        choosingDestinationCheck = true;
-                        if (stackRight.size() >= maxSizeStack) {
-                            System.out.println("\nVOCE VENCEU\n");
-                            playing = false;
-                        }
-                    } else {
-                        System.out.println("Esta torre tem no topo menor");
-                    }
-                }
-
+                
 
             } while(!choosingDestinationCheck);
             countPlays += 1;
@@ -163,7 +110,7 @@ public class Main {
         Random random = new Random();
 
         while (count < maxSizeStack) {
-            int randomNumber = random.nextInt(100); // Altere o limite conforme necessário
+            int randomNumber = random.nextInt(100); 
 
             if (!contains(jaForam, count, randomNumber)) {
                 stack.push(randomNumber);

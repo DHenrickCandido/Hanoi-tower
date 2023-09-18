@@ -13,7 +13,7 @@ public class Stack {
 
     public int peek() {
         if (isEmpty()) {
-            throw new Error("cu");
+            return -1;
         }
         return top.getValue();
     }
@@ -32,7 +32,7 @@ public class Stack {
 
     public int pop() {
         if (isEmpty()) {
-            throw new Error("The stack is empty.");
+            return -1;
         }
         int poppedValue = top.getValue();
         top = top.getNext();
@@ -41,16 +41,6 @@ public class Stack {
 
     public boolean isEmpty() {
         return top == null;
-    }
-
-    public void print() {
-        Node current = top;
-        System.out.print("Stack: ");
-        while (current != null) {
-            System.out.print(current.getValue() + " ");
-            current = current.getNext();
-        }
-        System.out.println();
     }
 
     public void printH() {
@@ -69,15 +59,6 @@ public class Stack {
         System.out.println();
     }
 
-    public void printV() {
-        Node current = top;
-        System.out.println("Stack: ");
-        while (current != null) {
-            System.out.println(current.getValue());
-            current = current.getNext();
-        }
-        System.out.println("\n");
-    }
 }
 
 
